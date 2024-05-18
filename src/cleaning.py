@@ -14,6 +14,7 @@ def clean_data(df, fillna=False, number_imputer=None):
     # change dtype
     dtypes = {
         "vip": "float",
+        "cryo_sleep": "float",
     }
     df = df.astype(dtypes)
 

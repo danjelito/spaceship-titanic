@@ -14,18 +14,19 @@ def create_travel_in_group(df):
 
 
 def create_deck(df):
-    df["deck"] = df["cabin"].str.split("/").str[0]
+    df["deck"] = df["cabin"].str.split("/").str[0].fillna("BLANK")
     return df
 
 
 def create_room_number(df):
-    df["room_number"] = df["cabin"].str.split("/").str[1].astype("float")
+    df["room_number"] = df["cabin"].str.split("/").str[1].fillna("BLANK")
     return df
 
 
 def create_side(df):
-    df["side"] = df["cabin"].str.split("/").str[2].astype("str")
+    df["side"] = df["cabin"].str.split("/").str[2].fillna("BLANK")
     return df
+
 
 def create_is_name_blank(df):
     df["is_name_blank"] = df["name"].astype("str").str.upper() == "BLANK"
@@ -39,4 +40,5 @@ def feature_engineering(df):
     df = create_room_number(df)
     df = create_side(df)
     df = create_is_name_blank(df)
+    # assert set(df["vip"].unique()) - set([1, 0]) == None
     return df

@@ -3,7 +3,10 @@ from sklearn.model_selection import StratifiedKFold
 from xgboost import XGBClassifier
 from sklearn.impute import KNNImputer
 from sklearn.preprocessing import StandardScaler
-from src import cleaning, preprocessing, feature_engineering
+from src import cleaning, feature_engineering
+from src.preprocessing import preprocessing, column_order
+from src.feature_engineering import feature_engineering
+from src.utils import print_df_in_chunks
 from tabulate import tabulate
 
 
@@ -23,23 +26,22 @@ x_train = cleaning.clean_data(x_train)
 x_test = cleaning.clean_data(x_test)
 
 # preprocessing
-preprocessing = preprocessing.preprocessing
 preprocessing.fit(x_train)
-x_train_prep = pd.DataFrame(preprocessing.transform(x_train), columns=x_train.columns)
-x_test_prep = pd.DataFrame(preprocessing.transform(x_test), columns=x_test.columns)
+x_train = pd.DataFrame(preprocessing.transform(x_train), columns=column_order)
+x_test = pd.DataFrame(preprocessing.transform(x_test), columns=column_order)
+assert x_train.isna().sum().sum() == 0
+assert x_test.isna().sum().sum() == 0
 
 # feature engineering
-x_train_eng = feature_engineering.feature_engineering(x_train_prep)
-x_test_eng = feature_engineering.feature_engineering(x_test_prep)
+x_train = feature_engineering(x_train)
+x_test = feature_engineering(x_test)
+assert x_train.isna().sum().sum() == 0
+assert x_test.isna().sum().sum() == 0
 
 # encoding and scaling
 
 
-
-print(tabulate(x_train_prep.iloc[:, :8].head(), headers="keys"))
-print(tabulate(x_train_prep.iloc[:, 8:15].head(), headers="keys"))
-print(tabulate(x_train_prep.iloc[:, 15:].head(), headers="keys"))
-print(x_train_eng.columns)
+print_df_in_chunks(x_train, 5)
 print("Done")
 
 # # training and validation loop

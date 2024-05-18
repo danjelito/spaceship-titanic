@@ -1,63 +1,46 @@
+import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.experimental import enable_iterative_imputer
-from sklearn.impute import IterativeImputer, SimpleImputer
-from sklearn.base import BaseEstimator, TransformerMixin
-
-
-class BoolImputer(BaseEstimator, TransformerMixin):
-
-    def __init__(self):
-        self.imputer = IterativeImputer()
-
-    def fit(self, x, y=None):
-        x = x.copy()
-        x = x.astype("float")
-        self.imputer.fit(x)
-        return self
-
-    def transform(self, x, y=None):
-        x = x.copy()
-        x = x.astype("float")
-        x = self.imputer.transform(x)
-        x = x.round(0)
-        return x
-
-    def fit_transform(self, x, y=None):
-        self.fit(x)
-        return self.transform(x)
+from sklearn.impute import SimpleImputer, IterativeImputer
+from sklearn.preprocessing import MinMaxScaler, FunctionTransformer
 
 
 dtypes = {
     "str": [
-        "passenger_id",
-        "home_planet",
-        "cryo_sleep",
-        "cabin",
-        "destination",
-        "name",
+        "passenger_id", "home_planet", "cabin", "destination", "name",
     ],
     "float": [
-        "age",
-        "room_service",
-        "food_court",
-        "shopping_mall",
-        "spa",
-        "vr_deck",
+        "age", "room_service", "food_court", "shopping_mall", "spa", "vr_deck",
     ],
     "bool": [
-        "vip",
+        "cryo_sleep", "vip",
     ],
 }
-str_pipeline = Pipeline(
-    [("impute", SimpleImputer(strategy="constant", fill_value="BLANK"))]
-)
-float_pipeline = Pipeline([("impute", IterativeImputer())])
-bool_pipeline = Pipeline([("impute", BoolImputer())])
+str_pipeline = Pipeline([
+    # impute missing values
+    ("impute", SimpleImputer(strategy="constant", fill_value="BLANK"))
+])
+float_pipeline = Pipeline([
+    # impute missing values
+    ("impute", IterativeImputer())
+])
+bool_pipeline = Pipeline([
+    # impute missing values
+    ("impute", IterativeImputer()),
+    # make the range (0, 1) after imputation
+    ("scale", MinMaxScaler(feature_range=(0, 1))),
+    # round to make it 0 or 1 again (because boolean)
+    ("round", FunctionTransformer(np.round)),
+])
+# pipeline for all features
 preprocessing = ColumnTransformer(
     [
         ("str", str_pipeline, dtypes["str"]),
         ("float", float_pipeline, dtypes["float"]),
         ("bool", bool_pipeline, dtypes["bool"]),
-    ]
+    ],
+    remainder="passthrough",
 )
+# the order of resulting df will be based on the order in columntransformer
+column_order = [col for cols in dtypes.values() for col in cols]
