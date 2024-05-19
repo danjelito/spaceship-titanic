@@ -31,7 +31,7 @@ bool_pipeline = Pipeline([
     # make the range (0, 1) after imputation
     ("scale", MinMaxScaler(feature_range=(0, 1))),
     # round to make it 0 or 1 again (because boolean)
-    ("round", FunctionTransformer(np.round)),
+    ("round", FunctionTransformer(np.round, feature_names_out="one-to-one")),
 ])
 # pipeline for all features
 preprocessing = ColumnTransformer(

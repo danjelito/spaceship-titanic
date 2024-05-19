@@ -9,7 +9,7 @@ def create_group_id(df):
 
 
 def create_travel_in_group(df):
-    df["travel_in_group"] = df["group_id"].duplicated(keep=False).astype(bool)
+    df["travel_in_group"] = df["group_id"].duplicated(keep=False).astype("float")
     return df
 
 
@@ -29,7 +29,9 @@ def create_side(df):
 
 
 def create_is_name_blank(df):
-    df["is_name_blank"] = df["name"].astype("str").str.upper() == "BLANK"
+    df["is_name_blank"] = (df["name"].astype("str").str.upper() == "BLANK").astype(
+        "float"
+    )
     return df
 
 
