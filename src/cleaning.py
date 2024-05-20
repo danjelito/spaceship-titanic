@@ -5,7 +5,7 @@ def camel_to_snake(text):
     return re.sub(r"(?<!^)(?=[A-Z])", "_", text).lower()
 
 
-def clean_data(df, fillna=False, number_imputer=None):
+def cleaning(df):
 
     # rename columns
     df = df.rename(columns=lambda c: camel_to_snake(c))

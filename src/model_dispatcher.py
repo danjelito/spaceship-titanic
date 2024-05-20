@@ -29,15 +29,29 @@ class NeuralNetwork(nn.Module):
 
 
 models = {
-    "ada": AdaBoostClassifier(),
-    "dt": DecisionTreeClassifier(),
-    "gauss": GaussianProcessClassifier(),
-    "gb": GradientBoostingClassifier(),
-    "mlp": MLPClassifier(),
-    "nb": GaussianNB(),
-    "net": NeuralNetClassifier(
-        NeuralNetwork, max_epochs=10, lr=0.01, verbose=0, criterion=nn.BCELoss
-    ),
-    "rf": RandomForestClassifier(),
+    # "ada": AdaBoostClassifier(),
+    # "dt": DecisionTreeClassifier(),
+    # "gauss": GaussianProcessClassifier(),
+    # "gb": GradientBoostingClassifier(),
+    # "mlp": MLPClassifier(),
+    # "nb": GaussianNB(),
+    # "net": NeuralNetClassifier(
+    #     NeuralNetwork, max_epochs=10, lr=0.01, verbose=0, criterion=nn.BCELoss
+    # ),
+    # "rf": RandomForestClassifier(),
     "xgb": XGBClassifier(),
+    "xgb_tuned": XGBClassifier(
+        **{
+            "booster": "gbtree",
+            "lambda": 8.999047800441808e-05,
+            "alpha": 0.5510484808227769,
+            "subsample": 0.2462366922641045,
+            "colsample_bytree": 0.9856817861224756,
+            "eta": 0.04151338214066351,
+            "gamma": 0.0007209896246520909,
+            "max_depth": 6,
+            "min_child_weight": 4,
+            "grow_policy": "depthwise",
+        }
+    ),
 }
