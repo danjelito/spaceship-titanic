@@ -10,10 +10,10 @@ dtypes = {
     "str": [
         "home_planet",
         "destination",
-        "group_id",
         "deck",
-        "room_number",
+        "group_id",
         "side",
+        "room_number",
     ],
     "float": [
         "age",

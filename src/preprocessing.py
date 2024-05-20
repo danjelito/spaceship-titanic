@@ -42,5 +42,3 @@ preprocessing = ColumnTransformer(
     ],
     remainder="passthrough",
 )
-# the order of resulting df will be based on the order in columntransformer
-column_order = [col for cols in dtypes.values() for col in cols]
