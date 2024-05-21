@@ -42,5 +42,4 @@ def feature_engineering(df):
     df = create_room_number(df)
     df = create_side(df)
     df = create_is_name_blank(df)
-    # assert set(df["vip"].unique()) - set([1, 0]) == None
     return df

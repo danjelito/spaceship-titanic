@@ -43,15 +43,15 @@ models = {
     "xgb_tuned": XGBClassifier(
         **{
             "booster": "gbtree",
-            "lambda": 8.999047800441808e-05,
-            "alpha": 0.5510484808227769,
-            "subsample": 0.2462366922641045,
-            "colsample_bytree": 0.9856817861224756,
-            "eta": 0.04151338214066351,
-            "gamma": 0.0007209896246520909,
-            "max_depth": 6,
-            "min_child_weight": 4,
-            "grow_policy": "depthwise",
+            "lambda": 5.109935951174421e-07,
+            "alpha": 0.06635237505310092,
+            "subsample": 0.7404565076053088,
+            "colsample_bytree": 0.6918787613388593,
+            "eta": 0.09015511696579205,
+            "gamma": 2.6131496243196327e-05,
+            "max_depth": 5,
+            "min_child_weight": 1,
+            "grow_policy": "lossguide",
         }
     ),
 }

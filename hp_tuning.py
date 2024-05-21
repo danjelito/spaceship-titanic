@@ -3,13 +3,19 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_predict
 from xgboost import XGBClassifier
 
-from src import module
+from src import module, feature_selection
 
+# load dataset
 x_train, y_train, _ = module.load_dataset()
+
+# data preparation
 x_train, _ = module.data_preparation(x_train, _)
 x_train = x_train.values.astype("float32")
-y_train = y_train.values.astype("float32")
+y_train = y_train.values.astype("float32").ravel()
 
+# feature selection
+mask = feature_selection.get_selected_features(x_train, y_train)
+x_train = x_train[:, mask]
 
 def objective(trial):
     param = {
@@ -42,6 +48,6 @@ def objective(trial):
 
 if __name__ == "__main__":
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=50)
+    study.optimize(objective, n_trials=100)
     print()
     print(f"Best params: {study.best_params}")

@@ -8,6 +8,7 @@ from src import (
     model_dispatcher,
     module,
     scoring,
+    feature_selection
 )
 from src.utils import print_df_in_chunks
 
@@ -30,8 +31,13 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(x_train, y_train)):
     x_train_fold, x_val_fold = module.data_preparation(x_train_fold, x_val_fold)
     x_train_fold = x_train_fold.values.astype("float32")
     x_val_fold = x_val_fold.values.astype("float32")
-    y_train_fold = y_train_fold.values.astype("float32")
-    y_val_fold = y_val_fold.values.astype("float32")
+    y_train_fold = y_train_fold.values.astype("float32").ravel()
+    y_val_fold = y_val_fold.values.astype("float32").ravel()
+
+    # feature selection
+    mask = feature_selection.get_selected_features(x_train_fold, y_train_fold)
+    x_train_fold = x_train_fold[:, mask]
+    x_val_fold = x_val_fold[:, mask]
 
     for name, model in model_dispatcher.models.items():
 
@@ -42,7 +48,7 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(x_train, y_train)):
 
         scores = scoring.return_score(y_val_fold, pred)
         print(
-            f"Fold {fold: <1} | model {name: <6}:  acc {scores.acc: .5f}  f1 {scores.f1: .5f}"
+            f"Fold {fold: <1} | model {name: <10}:  acc {scores.acc: .5f}  f1 {scores.f1: .5f}"
         )
         model_scores[name]["acc"].append(scores.acc)
         model_scores[name]["f1"].append(scores.f1)
