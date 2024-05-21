@@ -18,7 +18,7 @@ x_train = x_train[:, mask]
 x_test = x_test[:, mask]
 
 # model initialization
-model = model_dispatcher.models["xgb_tuned"]
+model = model_dispatcher.models["catboost_tuned"]
 
 # predict
 model.fit(x_train, y_train)

@@ -1,4 +1,6 @@
 import torch.nn as nn
+from catboost import CatBoostClassifier
+from lightgbm import LGBMClassifier
 from sklearn.ensemble import (
     AdaBoostClassifier,
     GradientBoostingClassifier,
@@ -11,6 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from skorch import NeuralNetClassifier
 from torch import nn
 from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier
 
 
 class NeuralNetwork(nn.Module):
@@ -30,14 +34,14 @@ class NeuralNetwork(nn.Module):
 
 models = {
     # "ada": AdaBoostClassifier(),
+    # "catboost": CatBoostClassifier(verbose=False),
     # "dt": DecisionTreeClassifier(),
     # "gauss": GaussianProcessClassifier(),
     # "gb": GradientBoostingClassifier(),
+    # "lgb": LGBMClassifier(),
     # "mlp": MLPClassifier(),
     # "nb": GaussianNB(),
-    # "net": NeuralNetClassifier(
-    #     NeuralNetwork, max_epochs=10, lr=0.01, verbose=0, criterion=nn.BCELoss
-    # ),
+    # "net": NeuralNetClassifier(NeuralNetwork, max_epochs=10, lr=0.01, verbose=0, criterion=nn.BCELoss),
     # "rf": RandomForestClassifier(),
     "xgb": XGBClassifier(),
     "xgb_tuned": XGBClassifier(
@@ -52,6 +56,21 @@ models = {
             "max_depth": 5,
             "min_child_weight": 1,
             "grow_policy": "lossguide",
+        }
+    ),
+    "catboost": CatBoostClassifier(verbose=False),
+    "catboost_tuned": CatBoostClassifier(
+        **{
+            "verbose":False,
+            "n_estimators": 441,
+            "learning_rate": 0.08624571897240016,
+            "depth": 12,
+            "l2_leaf_reg": 1.7275826170857882,
+            "objective": "Logloss",
+            "colsample_bylevel": 0.07940489532774267,
+            "boosting_type": "Ordered",
+            "bootstrap_type": "Bernoulli",
+            "subsample": 0.9170590299364719,
         }
     ),
 }
