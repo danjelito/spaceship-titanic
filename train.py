@@ -1,12 +1,12 @@
+import time
 import warnings
 from collections import defaultdict
 
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
-from src import model_dispatcher, module, scoring, feature_selection
+from src import feature_selection, model_dispatcher, module, scoring
 from src.utils import print_df_in_chunks
-
 
 # load df
 x_train, y_train, x_test = module.load_dataset()
@@ -40,15 +40,21 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(x_train, y_train)):
     for model_name, model in model_dispatcher.models.items():
 
         # fit model
+        start_time = time.time()
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            model.fit(x_train_fold, y_train_fold)
+            if model_name == "net":
+                model.fit(x_train_fold, y_train_fold.reshape(-1, 1))
+            else:
+                model.fit(x_train_fold, y_train_fold)
             pred = model.predict(x_val_fold)
+            end_time = time.time()
+            time_taken = end_time - start_time
 
         # scoring
         scores = scoring.return_score(y_val_fold, pred)
         print(
-            f"Fold {fold: <1} | model {model_name: <10}:  acc {scores.acc: .5f}  f1 {scores.f1: .5f}"
+            f"Fold {fold: <1} | model {model_name: <10}:  acc {scores.acc: .5f}  f1 {scores.f1: .5f}  time {time_taken: .1f}s"
         )
         model_scores[model_name]["acc"].append(scores.acc)
         model_scores[model_name]["f1"].append(scores.f1)
