@@ -1,4 +1,3 @@
-import pandas as pd
 from tabulate import tabulate
 
 def print_df_in_chunks(df, n):
