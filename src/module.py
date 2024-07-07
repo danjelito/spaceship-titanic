@@ -3,6 +3,7 @@ from src.cleaning import cleaning
 from src.preprocessing import preprocessing
 from src.feature_engineering import feature_engineering
 from src.scaling_encoding import scaling_encoding
+from tabulate import tabulate
 
 
 def load_dataset():
@@ -56,3 +57,23 @@ def data_preparation(x_train, x_test):
     assert (x_train.columns == x_test.columns).all()
 
     return x_train, x_test
+
+
+
+def print_df_in_chunks(df, n):
+    """
+    Prints the DataFrame in chunks of n columns using tabulate.
+
+    Parameters:
+    df (pd.DataFrame): The DataFrame to print.
+    n (int): The number of columns per chunk.
+    """
+    start = 0
+    end = n
+    total_columns = df.shape[1]
+    
+    while start < total_columns:
+        print(tabulate(df.iloc[:, start:end], headers="keys", tablefmt="orgtbl"))
+        start = end
+        end += n
+        print()  # Add an empty line between chunks for better readability

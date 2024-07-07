@@ -8,6 +8,9 @@ from sklearn.metrics import (
 from collections import namedtuple
 
 
+def harmonic_mean(a, b):
+    return 2 * (a * b) / (a + b)
+
 def return_score(y_true, y_pred):
     acc = accuracy_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred, average="weighted")

@@ -2,6 +2,7 @@ import time
 import warnings
 from collections import defaultdict
 
+import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
@@ -43,10 +44,13 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(x_train, y_train)):
         start_time = time.time()
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
+            
+            # training for nn need reshaping the y
             if model_name == "net":
                 model.fit(x_train_fold, y_train_fold.reshape(-1, 1))
             else:
                 model.fit(x_train_fold, y_train_fold)
+            
             pred = model.predict(x_val_fold)
             end_time = time.time()
             time_taken = end_time - start_time
@@ -60,12 +64,17 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(x_train, y_train)):
         model_scores[model_name]["f1"].append(scores.f1)
 
 # print score
-for model_name, metrics in model_scores.items():
+dfs = []
+for name, metrics in model_scores.items():
     avg_acc = np.mean(metrics["acc"])
     avg_f1 = np.mean(metrics["f1"])
-    print()
-    print(f"Model: {model_name}")
-    print(f"Average Accuracy: {avg_acc:.4f}")
-    print(f"Average F1 Score: {avg_f1:.4f}")
+    df = pd.DataFrame(data={"model": [name], "acc": [avg_acc], "f1": [avg_f1]})
+    dfs.append(df)
+
+df = pd.concat(dfs).reset_index(drop=True)
+df = df.assign(harmonic_mean=lambda df_: scoring.harmonic_mean(df_["acc"], df_["f1"]))
+df = df.sort_values("harmonic_mean", ascending=False, ignore_index=True)
+
+module.print_df_in_chunks(df, 10)
 
 print("Done!")

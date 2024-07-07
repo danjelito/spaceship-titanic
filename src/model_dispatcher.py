@@ -37,22 +37,22 @@ class NeuralNetwork(nn.Module):
 
 
 models = {
-    # "ada": AdaBoostClassifier(),
-    # "catboost": CatBoostClassifier(verbose=False),
-    # "dt": DecisionTreeClassifier(),
-    # "gb": GradientBoostingClassifier(),
-    # "knn": KNeighborsClassifier(),
+    "ada": AdaBoostClassifier(),
+    "catboost": CatBoostClassifier(verbose=False),
+    "dt": DecisionTreeClassifier(),
+    "gb": GradientBoostingClassifier(),
+    "knn": KNeighborsClassifier(),
     # "lda": LinearDiscriminantAnalysis(),
-    # "lgb": LGBMClassifier(),
-    # "log_reg": LogisticRegression(),
-    # "mlp": MLPClassifier(),
-    # "nb": GaussianNB(),
+    "lgb": LGBMClassifier(verbosity=-1),
+    "log_reg": LogisticRegression(),
+    "mlp": MLPClassifier(),
+    "nb": GaussianNB(),
     "net": NeuralNetClassifier(
         NeuralNetwork, max_epochs=10, lr=0.01, verbose=0, criterion=nn.BCELoss
     ),
-    # "qda": QuadraticDiscriminantAnalysis(),
-    # "rf": RandomForestClassifier(),
-    # "xgb": XGBClassifier(),
+    "qda": QuadraticDiscriminantAnalysis(),
+    "rf": RandomForestClassifier(),
+    "xgb": XGBClassifier(),
     # "xgb_tuned": XGBClassifier(
     #     **{
     #         "booster": "gbtree",
